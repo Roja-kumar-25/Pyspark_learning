@@ -8,7 +8,7 @@ transform_df=[("mongodb",4500,10),
 columns=["courseName","fee","discount"]
 spark=SparkSession.builder.appName("transform_exp.com").getOrCreate()
 trans_df=spark.createDataFrame(data=transform_df,schema=columns)
-trans_df.show()
+# trans_df.show()
 
 def ucaseCourse(trans_df):
     return trans_df.withColumn("CourseName",upper(trans_df.courseName))
@@ -21,4 +21,20 @@ obj=trans_df.transform(ucaseCourse)\
     .transform(reduce_price,1000)\
         .transform(discountedPrice)
     
-obj.show()
+# obj.show()
+
+
+data = [
+ ("James,,Smith",["Java","Scala","C++"],["Spark","Java"]),
+ ("Michael,Rose,",["Spark","Java","C++"],["Spark","Java"]),
+ ("Robert,,Williams",["CSharp","VB"],["Spark","Python"])
+]
+df = spark.createDataFrame(data=data,schema=["Name","Languages1","Languages2"])
+df.printSchema()
+df.show()
+
+# using transform() function
+from pyspark.sql.functions import upper
+from pyspark.sql.functions import transform
+df.select(transform("Languages1", lambda x: upper(x)).alias("languages1")) \
+  .show()
