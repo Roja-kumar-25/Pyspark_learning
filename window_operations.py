@@ -1,7 +1,7 @@
 #1.first letw discuss about the window ranking functions:
 from pyspark.sql import SparkSession
 from pyspark.sql.window import Window
-from pyspark.sql.functions import row_number,rank,dense_rank
+from pyspark.sql.functions import row_number,rank,dense_rank,percent_rank,ntile
 
 spark=SparkSession.builder.appName("windowOperations.com").getOrCreate()
 
@@ -33,3 +33,9 @@ df.withColumn("rank",rank().over(windowSpec)).show()
 
 # 3.dense_rank
 df.withColumn("dense_rank",dense_rank().over(windowSpec)).show()
+
+#4. percent rank
+df.withColumn("percent_rank",percent_rank().over(windowSpec)).show()
+
+#5.ntile 
+df.withColumn("ntile",ntile(3).over(windowSpec)).show()
