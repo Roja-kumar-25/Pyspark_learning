@@ -1,7 +1,7 @@
 #1.first letw discuss about the window ranking functions:
 from pyspark.sql import SparkSession
 from pyspark.sql.window import Window
-from pyspark.sql.functions import row_number,rank,dense_rank,percent_rank,ntile
+from pyspark.sql.functions import row_number,rank,dense_rank,percent_rank,ntile,when,col
 
 spark=SparkSession.builder.appName("windowOperations.com").getOrCreate()
 
@@ -28,14 +28,20 @@ df= spark.createDataFrame(data=data,schema=columns)
 windowSpec=Window.partitionBy("Departments").orderBy("salary")
 # df.withColumn("row_number",row_number().over(windowSpec)).show()
 
+
+
 # 2.rank
-df.withColumn("rank",rank().over(windowSpec)).show()
+df=df.withColumn("dense-rank",dense_rank().over(windowSpec))
+df.show()
+df.filter(col("dense-rank")==2).show()
 
-# 3.dense_rank
-df.withColumn("dense_rank",dense_rank().over(windowSpec)).show()
+# # 3.dense_rank
+# df.withColumn("dense_rank",dense_rank().over(windowSpec)).show()
 
-#4. percent rank
-df.withColumn("percent_rank",percent_rank().over(windowSpec)).show()
+# #4. percent rank
+# df.withColumn("percent_rank",percent_rank().over(windowSpec)).show()
 
-#5.ntile 
-df.withColumn("ntile",ntile(3).over(windowSpec)).show()
+# #5.ntile 
+# df.withColumn("ntile",ntile(3).over(windowSpec)).show()
+
+# df.withColumn("ntile",ntile(2).over(windowSpec)).show()
